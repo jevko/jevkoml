@@ -2,7 +2,7 @@ import {parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/parsejev
 import {readTextFileSync} from './io.js'
 import * as mod from "https://deno.land/std@0.163.0/streams/conversion.ts";
 
-import { isAbsolute, join, dirname } from "https://deno.land/std@0.165.0/path/posix.ts";
+import { isAbsolute, join, dirname } from "https://deno.land/std@0.165.0/path/mod.ts";
 
 const breakPrefix = prefix => {
   let i = prefix.length - 1
@@ -21,7 +21,7 @@ const breakPrefix = prefix => {
 const prep = (jevko, dir = '.', top = false) => {
   const {subjevkos, ...rest} = jevko
 
-  let output
+  let output, prepend
   const subs = []
   for (const {prefix, jevko} of subjevkos) {
     const [text, tag] = breakPrefix(prefix)
@@ -63,6 +63,9 @@ const prep = (jevko, dir = '.', top = false) => {
         if (top === false) throw Error('oops')
         const fileName = string(jevko)
         output = fileName
+      } else if (directive === 'prepend') {
+        if (top === false) throw Error('oops')
+        prepend = listOfString(jevko)
       } else throw Error(`unknown directive: ${tag}`)
       continue
     }
@@ -71,16 +74,29 @@ const prep = (jevko, dir = '.', top = false) => {
   }
   const ret = {subjevkos: subs, ...rest}
 
-  if (top === true) return {output, document: ret}
+  if (top === true) return {output, prepend, document: ret}
   return ret
 }
 
 const string = jevko => {
-  const {subjevkos, suffix, ...rest} = jevko
+  const {subjevkos, suffix} = jevko
 
   if (subjevkos.length > 0) throw Error("oops")
 
   return suffix
+}
+
+const listOfString = jevko => {
+  const {subjevkos, suffix} = jevko
+
+  if (subjevkos.length === 0) return [suffix]
+
+  const ret = []
+  for (const {prefix, jevko} of subjevkos) {
+    if (prefix !== '') throw Error('oops')
+    ret.push(string(jevko))
+  }
+  return ret
 }
 
 const toHtml = async jevko => {
@@ -255,11 +271,23 @@ export const parseHtmlJevko = (source, dir = '.', top = false) => {
 }
 
 export const jevkoStrToHtmlStr = async (source, dir) => {
-  const {output, document} = parseHtmlJevko(source, dir, true)
-  const content = await toHtml(document)
+  const {output, prepend, document} = parseHtmlJevko(source, dir, true)
+  let content = await toHtml(document)
+
+  if (prepend !== undefined) {
+    const keywords = prepend
+    // note: hacky
+    if (keywords.includes('viewport')) {
+      content = `<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />` + content
+    }
+    // note: this should be last (so it's always prepended at the beginning)
+    if (keywords.includes('doctype')) {
+      content = `<!doctype html>\n` + content
+    }
+  }
 
   return { 
-    document: `<!doctype html>\n<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />\n${content}`, 
+    document: content, 
     output,
   }
 }

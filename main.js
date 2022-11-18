@@ -1,7 +1,7 @@
 import {jevkoStrToHtmlStr} from './make.js'
 import {readTextFileSync, readStdinText, writeTextFileSync} from './io.js'
 
-import { dirname, join } from "https://deno.land/std@0.165.0/path/posix.ts";
+import { dirname, join } from "https://deno.land/std@0.165.0/path/mod.ts";
 
 // todo: exactly 1?
 let src

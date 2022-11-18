@@ -1,1 +1,1 @@
-deno run --allow-read --allow-run --allow-write main.js test/markup2.jevko
+deno run --allow-read --allow-run --allow-write main.js $1
