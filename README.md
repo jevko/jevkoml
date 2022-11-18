@@ -80,7 +80,7 @@ Following these instructions, you will get a single `jevkoml` executable which i
 2. Unzip the archive, e.g.:
 
 ```
-unzip jevkoml-x86_64-linux.zip
+unzip jevkoml-linux-x64.zip
 ```
 
 3. Done.
