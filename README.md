@@ -26,7 +26,7 @@ html [
         A link to Wikipedia!
       ]
       p [
-        Oh well, \span [lang=[fr][c'est la vie]], as they say in France.
+        Oh well, \span [lang=[fr]c'est la vie], as they say in France.
       ]
     ]
   ]
@@ -53,9 +53,7 @@ into this:
         A link to Wikipedia!
       </a>
       <p>
-        Oh well, 
-        <span lang="fr">c'est la vie</span>, 
-        as they say in France.
+        Oh well, <span lang="fr">c'est la vie</span>, as they say in France.
       </p>
     </div>
   </body>
