@@ -12,7 +12,6 @@ const breakPrefix = prefix => {
       break
     }
   }
-  // todo: perhaps trim-left the first part
   if (i > 0) return [prefix.slice(0, i), prefix.slice(i + 1).trim()]
   return ['', prefix.trim()]
 }
@@ -99,6 +98,28 @@ const listOfString = jevko => {
   return ret
 }
 
+// todo?: perhaps separate htmlEscape for attributes that does &quot; -- otherwise don't
+const htmlEscape = str => {
+  let ret = ''
+
+  let h = 0
+  for (let i = 0; i < str.length; ++i) {
+    const c = str[i]
+    if (c === '<') {
+      ret += str.slice(h, i) + '&lt;'
+      h = i + 1
+    }
+    else if (c === '&') {
+      ret += str.slice(h, i) + '&amp;'
+      h = i + 1
+    } else if (c === '"') {
+      ret += str.slice(h, i) + '&quot;'
+      h = i + 1
+    }
+  }
+  return ret + str.slice(h)
+}
+
 const toHtml = async jevko => {
   const {subjevkos, suffix} = jevko
 
@@ -108,9 +129,10 @@ const toHtml = async jevko => {
     if (tag !== undefined) {
       // unknown tag uses default highlighter
       const highlighter = highlighters.get(tag) ?? makeHighlighter(tag)
+      // note: assuming highlighter will do htmlEscape
       return highlighter(suffix)
     }
-    return suffix
+    return htmlEscape(suffix)
   }
 
   // if (suffix.trim() !== '') throw Error('nonblank suffix')
@@ -123,12 +145,13 @@ const toHtml = async jevko => {
     ret += await maker(jevko)
   }
 
-  // todo: perhaps trim-right the suffix?
-  return ret + suffix
+  // todo: perhaps don't trim-right the suffix?
+  return htmlEscape(ret + suffix.trimEnd())
 }
 
 const makeHighlighter = tag => async text => {
 
+  // todo: use pandoc only if available, otherwise a js lib (if available) or nothing = textToPre
   const pandoc = Deno.run({
     cmd: ['pandoc', '-f', 'markdown'],
     stdin: "piped",
@@ -155,7 +178,7 @@ const makeHighlighter = tag => async text => {
 }
 
 // todo: pass heredocs to pandoc/custom highlighters
-const textToPre = text => `<pre>${text}</pre>`
+const textToPre = text => `<pre>${htmlEscape(text)}</pre>`
 const highlighters = new Map([
   ['', textToPre],
   // ['ini', ],
@@ -175,10 +198,11 @@ const makeTag = tag => async jevko => {
   for (const s of subjevkos) {
     const {prefix, jevko} = s
     if (prefix === '.') classes.push(jevko.suffix)
-    else if (prefix.endsWith('=')) tagWithAttrs.push(`${prefix}"${jevko.suffix}"`)
+    else if (prefix.endsWith('=')) tagWithAttrs.push(`${prefix}"${htmlEscape(jevko.suffix)}"`)
     else children.push(s)
   }
 
+  // todo?: htmlEscape classnames
   if (classes.length > 0) tagWithAttrs.push(`class="${classes.join(' ')}"`)
 
   return `<${tagWithAttrs.join(' ')}>${await toHtml({subjevkos: children, suffix})}</${tag}>`
@@ -191,10 +215,12 @@ const makeSelfClosingTag = tag => jevko => {
 
   const tagWithAttrs = [tag]
   const classes = []
+
+  // todo: extract common between makeTag and makeSelfClosingTag
   for (const s of subjevkos) {
     const {prefix, jevko} = s
     if (prefix === '.') classes.push(jevko.suffix)
-    else if (prefix.endsWith('=')) tagWithAttrs.push(`${prefix}"${jevko.suffix}"`)
+    else if (prefix.endsWith('=')) tagWithAttrs.push(`${prefix}"${htmlEscape(jevko.suffix)}"`)
     else children.push(s)
   }
 
@@ -232,6 +258,7 @@ const makeTextNode = text => {
 const makeTagWithAnchor = tag => {
   const t = makeTag(tag)
   return jevko => {
+    // todo: better normalization -- only a-z and minus allowed, keep a global list of ids and append a number if exists
     const id = jevko.suffix.toLowerCase().replaceAll(' ', '-')
 
     const tree = parseHtmlJevko(
