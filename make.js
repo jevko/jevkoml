@@ -146,7 +146,7 @@ const toHtml = async jevko => {
   }
 
   // todo: perhaps don't trim-right the suffix?
-  return htmlEscape(ret + suffix.trimEnd())
+  return ret + htmlEscape(suffix.trimEnd())
 }
 
 const makeHighlighter = tag => async text => {
