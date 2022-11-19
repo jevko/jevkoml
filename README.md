@@ -89,6 +89,8 @@ You can now use the `jevkoml` executable as described in [Usage](#usage).
 
 You can also [install it on your system](#installation) to be able to invoke it as `jevkoml` from anywhere.
 
+*Note: the above binaries were [built with Deno](#build-a-self-contained-executable) on Linux. The Linux binary was tested and confirmed functional. The rest of the binaries were not tested, but should work insofar as `deno compile` works. If you encounter any issues (or confirm that it works on your system), please [file an issue on GitHub](https://github.com/jevko/jevkoml/issues).*
+
 ## Usage
 
 If `jevkoml` is [installed](#installation) you can invoke it as:
