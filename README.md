@@ -6,32 +6,9 @@ Converts JevkoML -- a Jevko markup format -- to HTML.
 
 For example, it will convert this:
 
-<!-- see a version with syntax highlighting (htmlpreview), get a syntax highlighting extension for visual studio code -->
+<!-- [ ] see a version with syntax highlighting (htmlpreview), [x] get a syntax highlighting extension for visual studio code -->
 
-```jevko
-html [
-  head [
-    title [This is a title]
-  ]
-  body [
-    div [
-      p [Hello world!]
-      abbr [
-        id=[anId]
-        class=[jargon]
-        style=[color: purple;]
-        title=[Hypertext Markup Language]
-      HTML]
-      a [href=[https://www.wikipedia.org/]
-        A link to Wikipedia!
-      ]
-      p [
-        Oh well, \span [lang=[fr]c'est la vie], as they say in France.
-      ]
-    ]
-  ]
-]
-```
+![screenshot](screenshot.png)
 
 into this:
 
@@ -63,6 +40,8 @@ into this:
 excepting some indentation in the output.
 
 See [jevkoml.md](jevkoml.md) for details.
+
+Also see the [JevkoML syntax highlighting extension for Visual Studio Code](https://github.com/jevko/jevkoml-basic-highlighting-vscode) which was used to produce the screenshot above.
 
 ## Get the latest binary release
 
