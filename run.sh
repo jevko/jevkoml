@@ -1,1 +1,1 @@
-deno run --allow-read --allow-run --allow-write main.js $1
+deno run --allow-read --allow-run --allow-write jevkoml.js $1

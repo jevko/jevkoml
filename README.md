@@ -172,7 +172,7 @@ rm /home/myusername/.local/bin/jevkoml
 
 ## Build or run with Deno
 
-*This is relevant only if you are not using the executable version.*
+*This is an alternative to using the executable version above.*
 
 ### Dependencies
 
@@ -189,7 +189,7 @@ sh run.sh filename.jevkoml
 or:
 
 ```
-deno run --allow-read --allow-run --allow-write main.js filename.jevkoml
+deno run --allow-read --allow-run --allow-write jevkoml.js filename.jevkoml
 ```
 
 ### Build a self-contained executable
@@ -203,7 +203,20 @@ sh build.sh
 or:
 
 ```
-deno compile --output jevkoml --allow-read --allow-run --allow-write main.js
+deno compile --output jevkoml --allow-read --allow-run --allow-write jevkoml.js
 ```
 
 The executable can now be [installed](#installation) or [used](#usage) as-is.
+
+## Deno install
+
+<!-- todo -->
+
+```
+deno install --root ~/.local/ --name jevkoml --allow-read --allow-run --allow-write jevkoml.js
+```
+
+<!-- ```
+ℹ️  Add /home/USER/.deno/bin to PATH
+    export PATH="/home/USER/.deno/bin:$PATH"
+``` -->

@@ -178,9 +178,10 @@ const makeHighlighter = tag => async text => {
 }
 
 // todo: pass heredocs to pandoc/custom highlighters
-const textToPre = text => `<pre>${htmlEscape(text)}</pre>`
+const cdata = text => htmlEscape(text)
+
 const highlighters = new Map([
-  ['', textToPre],
+  ['', cdata],
   // ['ini', ],
   // ['json', text => text],
   // ['jevko', text => text],

@@ -1,1 +1,1 @@
-deno compile --output jevkoml --allow-read --allow-run --allow-write main.js
+deno compile --output jevkoml --allow-read --allow-run --allow-write jevkoml.js
