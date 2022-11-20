@@ -1,0 +1,69 @@
+/output [markup2.out.html]
+/prepend [[doctype][viewport]]
+
+style [
+  /paste [hlight.css]
+  /paste [style.css]
+]
+
+# [anatomy of a jevko]
+
+/import [markup2.part2.jevkoml]
+
+p [We shall call a specific instance of a Jevko tree a \jevko[.[inline]jevko].]
+
+p [An example of a jevko looks like this:]
+
+pre [
+jevko `//first name [string]
+last name [string]
+is alive [boolean]
+age [integer]
+address [
+  street address [string]
+  city [string]
+  state [string]
+  postal code [string]
+]
+children [list]
+spouse []
+object//
+]
+
+p [We will now break this example down and identify and name its parts.]
+
+## [top jevko]
+
+p [Notice that the jevko is not wrapped in square brackets. A jevko which is not wrapped in square brackets is the \em[top] or \em[top-level] jevko.]
+
+## [jevko parts: subjevkos and suffix]
+
+p [A jevko is made out of a number of \sub[.[inline]subjevkos] followed by a \suf[.[inline]suffix]:]
+
+pre [
+sub `//first name [string]//
+sub `//last name [string]//
+sub `//is alive [boolean]//
+sub `//age [number]//
+sub `//address [
+  street address [string]
+  city [string]
+  state [string]
+  postal code [string]
+]//
+sub `//children [array]//
+sub `//spouse []//
+suf `//object//
+]
+
+## [subjevko parts: prefix and jevko]
+
+p [A \sub[.[inline]subjevko] is a kind of a name-value pair:]
+
+pre [
+  sub `//first name [string]//
+]
+
+p [
+  A subjevko is made out of a \prefix[.[inline]prefix] followed by a \jevko[.[inline]jevko] wrapped in \`//[square brackets]//:
+]
