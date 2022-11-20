@@ -1,6 +1,6 @@
 # jevkoml
 
-Converts JevkoML -- a Jevko markup format -- to HTML.
+Converts JevkoML -- a Jevko markup format -- to HTML or XML.
 
 ## Example
 
