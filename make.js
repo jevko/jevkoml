@@ -20,7 +20,7 @@ const breakPrefix = prefix => {
 const prep = (jevko, dir = '.', top = false) => {
   const {subjevkos, ...rest} = jevko
 
-  let output, prepend
+  let output, prepend, root
   const subs = []
   for (const {prefix, jevko} of subjevkos) {
     const [text, tag] = breakPrefix(prefix)
@@ -65,6 +65,9 @@ const prep = (jevko, dir = '.', top = false) => {
       } else if (directive === 'prepend') {
         if (top === false) throw Error('oops')
         prepend = listOfString(jevko)
+      } else if (directive === 'root') {
+        if (top === false) throw Error('oops')
+        root = listOfString(jevko)
       } else throw Error(`unknown directive: ${tag}`)
       continue
     }
@@ -73,7 +76,7 @@ const prep = (jevko, dir = '.', top = false) => {
   }
   const ret = {subjevkos: subs, ...rest}
 
-  if (top === true) return {output, prepend, document: ret}
+  if (top === true) return {output, prepend, root, document: ret}
   return ret
 }
 
@@ -123,6 +126,7 @@ const htmlEscape = str => {
 const toHtml = async jevko => {
   const {subjevkos, suffix} = jevko
 
+  // text or highlighted text
   if (subjevkos.length === 0) {
     const {tag} = jevko
     // console.log(jevko)
@@ -137,8 +141,8 @@ const toHtml = async jevko => {
 
   // if (suffix.trim() !== '') throw Error('nonblank suffix')
 
+  // tags
   let ret = ''
-
   for (const {prefix, jevko} of subjevkos) {
     // todo: optimize makeTag -- perhaps simple 2-arg fn (uncurry)
     const maker = ctx.get(prefix) ?? makeTag(prefix)
@@ -189,6 +193,29 @@ const highlighters = new Map([
   // ['toml', text => text],
   // ['ini', text => text],
 ])
+
+// todo: refactor
+const makeTop = jevko => {
+  const {subjevkos, suffix} = jevko
+
+  const attrs = []
+  const children = []
+  const classes = []
+  for (const s of subjevkos) {
+    const {prefix, jevko} = s
+    if (prefix === '.') classes.push(jevko.suffix)
+    else if (prefix.endsWith('=')) attrs.push(`${prefix}"${htmlEscape(jevko.suffix)}"`)
+    else children.push(s)
+  }
+
+  // todo?: htmlEscape classnames
+  if (classes.length > 0) attrs.push(`class="${classes.join(' ')}"`)
+
+  return {
+    attrs,
+    jevko: {subjevkos: children, suffix},
+  }
+}
 
 const makeTag = tag => async jevko => {
   const {subjevkos, suffix} = jevko
@@ -292,6 +319,10 @@ const ctx = new Map([
   ['prefix', makeSpanWithClass('prefix')],
   ['jevko', makeSpanWithClass('jevko')],
   ['gray', makeSpanWithClass('gray')],
+  ['cdata', async jevko => {
+    const ret = await toHtml(jevko)
+    return `<![CDATA[ ${ret} ]]>`
+  }]
 ])
 
 export const parseHtmlJevko = (source, dir = '.', top = false) => {
@@ -299,8 +330,18 @@ export const parseHtmlJevko = (source, dir = '.', top = false) => {
 }
 
 export const jevkoStrToHtmlStr = async (source, dir) => {
-  const {output, prepend, document} = parseHtmlJevko(source, dir, true)
-  let content = await toHtml(document)
+  const {output, prepend, root, document} = parseHtmlJevko(source, dir, true)
+
+  const {
+    attrs,
+    jevko,
+  } = makeTop(document)
+
+  if (root === undefined) {
+    if (attrs.length > 0) throw Error('unexpected top-level attributes; remove or add /root')
+  }
+
+  let content = await toHtml(jevko)
 
   if (prepend !== undefined) {
     const keywords = prepend
@@ -312,6 +353,19 @@ export const jevkoStrToHtmlStr = async (source, dir) => {
     if (keywords.includes('doctype')) {
       content = `<!doctype html>\n` + content
     }
+  }
+
+  if (root !== undefined) {
+    const [main, ...rest] = root
+
+    let openers = ''
+    let closers = ''
+    for (const s of rest) {
+      openers += `<${s}>`
+      closers = `</${s}>` + closers 
+    }
+
+    content = `<${[main, ...attrs].join(' ')}>${openers}${content}${closers}</${main}>`
   }
 
   return { 
