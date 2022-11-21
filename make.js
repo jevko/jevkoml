@@ -319,11 +319,13 @@ const ctx = new Map([
   ['prefix', makeSpanWithClass('prefix')],
   ['jevko', makeSpanWithClass('jevko')],
   ['gray', makeSpanWithClass('gray')],
+  // todo?: rename to !cdata
   ['cdata', async jevko => {
     const ret = await toHtml(jevko)
     return `<![CDATA[ ${ret} ]]>`
   }],
-  ['DOCTYPE', async jevko => {
+  // todo?: rename to !doctype
+  ['doctype', async jevko => {
     const ret = await string(jevko)
     return `<!DOCTYPE ${ret}>`
   }],
@@ -356,6 +358,7 @@ export const jevkoStrToHtmlStr = async (source, dir) => {
     if (keywords.includes('doctype')) {
       content = `<!doctype html>\n` + content
     }
+    // todo: ?xml special element
     // note: this should be last (so it's always prepended at the beginning)
     if (keywords.includes('xml1')) {
       content = `<?xml version="1.0" encoding="UTF-8"?>\n` + content
