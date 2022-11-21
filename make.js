@@ -322,7 +322,7 @@ const ctx = new Map([
   // todo?: rename to !cdata
   ['cdata', async jevko => {
     const ret = await toHtml(jevko)
-    return `<![CDATA[ ${ret} ]]>`
+    return `<![CDATA[${ret}]]>`
   }],
   // todo?: rename to !doctype
   ['doctype', async jevko => {
