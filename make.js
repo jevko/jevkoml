@@ -322,7 +322,11 @@ const ctx = new Map([
   ['cdata', async jevko => {
     const ret = await toHtml(jevko)
     return `<![CDATA[ ${ret} ]]>`
-  }]
+  }],
+  ['DOCTYPE', async jevko => {
+    const ret = await string(jevko)
+    return `<!DOCTYPE ${ret}>`
+  }],
 ])
 
 export const parseHtmlJevko = (source, dir = '.', top = false) => {
@@ -349,9 +353,12 @@ export const jevkoStrToHtmlStr = async (source, dir) => {
     if (keywords.includes('viewport')) {
       content = `<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />` + content
     }
-    // note: this should be last (so it's always prepended at the beginning)
     if (keywords.includes('doctype')) {
       content = `<!doctype html>\n` + content
+    }
+    // note: this should be last (so it's always prepended at the beginning)
+    if (keywords.includes('xml1')) {
+      content = `<?xml version="1.0" encoding="UTF-8"?>\n` + content
     }
   }
 
