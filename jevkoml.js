@@ -17,7 +17,7 @@ const breakPrefix = prefix => {
 }
 
 // todo: process top-level/one-shot directives separately; prepTop(jevko) -> prep(...)
-export const prep = (jevko, dir = '.', top = false) => {
+const prep = (jevko, dir = '.', top = false) => {
   const {subjevkos, ...rest} = jevko
 
   let output, prepend, root
@@ -337,7 +337,7 @@ const ctx = new Map([
   }],
 ])
 
-export const parseHtmlJevko = (source, dir = '.', top = false) => {
+const parseHtmlJevko = (source, dir = '.', top = false) => {
   return prep(parseJevkoWithHeredocs(source), dir, top)
 }
 
