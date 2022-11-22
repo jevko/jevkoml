@@ -17,7 +17,7 @@ const breakPrefix = prefix => {
 }
 
 // todo: process top-level/one-shot directives separately; prepTop(jevko) -> prep(...)
-const prep = (jevko, dir = '.', top = false) => {
+export const prep = (jevko, dir = '.', top = false) => {
   const {subjevkos, ...rest} = jevko
 
   let output, prepend, root
