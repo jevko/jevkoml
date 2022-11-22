@@ -22,8 +22,8 @@ import {prep} from './make.js'
 // if (output === undefined) console.log(document)
 // else writeTextFileSync(join(dir, output), document)
 
-export const jevkoml = async (jevko, dir) => {
-  const {output, prepend, root, document} = prep(jevko, dir, true)
+export const jevkoml = async (preppedjevko, dir) => {
+  const {output, prepend, root, document} = prep(preppedjevko, dir, true)
 
   const {
     attrs,
