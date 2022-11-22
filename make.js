@@ -60,13 +60,19 @@ const prep = (jevko, dir = '.', top = false) => {
         subs.push(...subjevkos)
       } else if (directive === 'output') {
         if (top === false) throw Error('oops')
+        // enforce only one occurence of the directive
+        if (output !== undefined) throw Error('oops')
         const fileName = string(jevko)
         output = fileName
       } else if (directive === 'prepend') {
         if (top === false) throw Error('oops')
+        // enforce only one occurence of the directive
+        if (prepend !== undefined) throw Error('oops')
         prepend = listOfString(jevko)
       } else if (directive === 'root') {
         if (top === false) throw Error('oops')
+        // enforce only one occurence of the directive
+        if (root !== undefined) throw Error('oops')
         root = listOfString(jevko)
       } else throw Error(`unknown directive: ${tag}`)
       continue
