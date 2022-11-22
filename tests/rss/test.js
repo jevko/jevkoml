@@ -1,4 +1,4 @@
-import {jevkoStrToHtmlStr} from '../../make.js'
+import {jevkoStrToHtmlStr} from '../../jevkoml.js'
 import { assertEquals } from "https://deno.land/std@0.165.0/testing/asserts.ts";
 
 Deno.test('rss', async () => {
