@@ -132,3 +132,7 @@ This should print something like:
 ```
 /home/USER/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin
 ```
+
+# Features coming soon
+
+* XML literals
