@@ -135,8 +135,10 @@ const toHtml = async jevko => {
   // text or highlighted text
   if (subjevkos.length === 0) {
     const {tag} = jevko
-    // console.log(jevko)
-    if (tag !== undefined) {
+    if (tag === 'xml' || tag === 'html') {
+      // xml/html literals -- no escaping
+      return suffix
+    } else if (tag !== undefined) {
       // unknown tag uses default highlighter
       const highlighter = highlighters.get(tag) ?? makeHighlighter(tag)
       // note: assuming highlighter will do htmlEscape
@@ -224,7 +226,7 @@ const makeTop = jevko => {
 }
 
 const makeTag = tag => async jevko => {
-  const {subjevkos, suffix} = jevko
+  const {subjevkos, suffix, ...rest} = jevko
 
   const tagWithAttrs = [tag]
   const children = []
@@ -239,7 +241,8 @@ const makeTag = tag => async jevko => {
   // todo?: htmlEscape classnames
   if (classes.length > 0) tagWithAttrs.push(`class="${classes.join(' ')}"`)
 
-  return `<${tagWithAttrs.join(' ')}>${await toHtml({subjevkos: children, suffix})}</${tag}>`
+  // note: pass in ...rest to handle highlighters and html/xml literals
+  return `<${tagWithAttrs.join(' ')}>${await toHtml({subjevkos: children, suffix, ...rest})}</${tag}>`
 }
 
 const makeSelfClosingTag = tag => jevko => {
@@ -341,12 +344,14 @@ const parseHtmlJevko = (source, dir = '.', top = false) => {
   return prep(parseJevkoWithHeredocs(source), dir, top)
 }
 
+// note: this is only used in tests
+//?todo: move to test utils or sth
 export const jevkoStrToHtmlStr = async (source, dir) => {
   return jevkoml(parseJevkoWithHeredocs(source), dir)
 }
 
-
 export const jevkoml = async (preppedjevko, dir) => {
+  // todo: remove handling of /output from prep -- Jevko CLI now handles that
   const {output, prepend, root, document} = prep(preppedjevko, dir, true)
 
   const {

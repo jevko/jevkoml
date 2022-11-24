@@ -133,6 +133,29 @@ This should print something like:
 /home/USER/.local/bin:/usr/local/bin:/usr/bin:/bin:/usr/local/sbin
 ```
 
-# Features coming soon
+<!-- todo: better writing -->
+# HTML/XML literals
 
-* XML literals
+You can enter literal HTML/XML which will not be escaped in the output via `` `/xml/ `` or `` `/html/ `` heredocs. For example:
+
+```
+`/html/
+<!doctype html>
+<html>
+/html/
+
+p [hello]
+
+`/html/
+</html>
+/html/
+```
+
+will produce something like:
+
+```html
+<!doctype html>
+<html>
+<p>hello</p>
+</html>
+```
