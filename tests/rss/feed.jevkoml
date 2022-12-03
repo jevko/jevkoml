@@ -1,7 +1,5 @@
-/output [feed.rss]
+`/xml/<rss version="2.0"><channel>/xml/
 
-/root [[rss][channel]]
-version=[2.0]
 title [Jevko updates]
 description [Latest official updates on the Jevko syntax]
 link [https://jevko.org]
@@ -27,3 +25,4 @@ item [
     p [#jevko #syntax #community #contributions]
   ]]
 ]
+`/xml/</channel></rss>/xml/

@@ -1,9 +1,7 @@
 import {parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/parsejevko.js@v0.1.8/mod.js'
-import {readTextFileSync} from './io.js'
 import * as mod from "https://deno.land/std@0.163.0/streams/conversion.ts";
 
-import { isAbsolute, join, dirname } from "https://deno.land/std@0.165.0/path/mod.ts";
-
+//?todo: ignore blanks before attribute names
 const breakPrefix = prefix => {
   let i = prefix.length - 1
   for (; i >= 0; --i) {
@@ -12,15 +10,18 @@ const breakPrefix = prefix => {
       break
     }
   }
-  if (i > 0) return [prefix.slice(0, i), prefix.slice(i + 1).trim()]
+  if (i > 0) {
+    const text = prefix.slice(0, i)
+    const tag = prefix.slice(i + 1).trim()
+    return [text, tag]
+  }
   return ['', prefix.trim()]
 }
 
 // todo: process top-level/one-shot directives separately; prepTop(jevko) -> prep(...)
-const prep = (jevko, dir = '.', top = false) => {
+const prep = (jevko, dir = '.') => {
   const {subjevkos, ...rest} = jevko
 
-  let output, prepend, root
   const subs = []
   for (const {prefix, jevko} of subjevkos) {
     const [text, tag] = breakPrefix(prefix)
@@ -30,60 +31,9 @@ const prep = (jevko, dir = '.', top = false) => {
     // remove disabled nodes (comments)
     if (tag.startsWith('-')) continue
 
-    // process directives
-    if (tag.startsWith('/')) {
-      const directive = tag.slice(1).trim()
-      if (directive === 'paste') {
-        const fileName = string(jevko)
-
-        let path
-        if (isAbsolute(fileName)) path = fileName
-        else path = join(dir, fileName)
-
-        // console.log(isAbsolute(fileName), fileName, dir, path)
-
-        const src = readTextFileSync(path)
-        subs.push(makeTextNode(src))
-      } else if (directive === 'import') {
-        const fileName = string(jevko)
-
-        let path
-        if (isAbsolute(fileName)) path = fileName
-        else path = join(dir, fileName)
-
-        const src = readTextFileSync(path)
-        const parsed = parseJevkoWithHeredocs(src)
-        if (parsed.suffix.trim() !== '') throw Error('oops')
-        // note: paths in imported file relative to IT rather than this file
-        const prepped = prep(parsed, dirname(path))
-        const {subjevkos} = prepped
-        subs.push(...subjevkos)
-      } else if (directive === 'output') {
-        if (top === false) throw Error('oops')
-        // enforce only one occurence of the directive
-        if (output !== undefined) throw Error('oops')
-        const fileName = string(jevko)
-        output = fileName
-      } else if (directive === 'prepend') {
-        if (top === false) throw Error('oops')
-        // enforce only one occurence of the directive
-        if (prepend !== undefined) throw Error('oops')
-        prepend = listOfString(jevko)
-      } else if (directive === 'root') {
-        if (top === false) throw Error('oops')
-        // enforce only one occurence of the directive
-        if (root !== undefined) throw Error('oops')
-        root = listOfString(jevko)
-      } else throw Error(`unknown directive: ${tag}`)
-      continue
-    }
-
     subs.push({prefix: tag, jevko: prep(jevko, dir)})
   }
-  const ret = {subjevkos: subs, ...rest}
-
-  if (top === true) return {output, prepend, root, document: ret}
-  return ret
+  return {subjevkos: subs, ...rest}
 }
 
 const string = jevko => {
@@ -161,6 +111,8 @@ const toHtml = async jevko => {
   return ret + htmlEscape(suffix.trimEnd())
 }
 
+//?todo: extract this as a jevkoml extension
+// thanks to that .jevkoml could become a pure JS library -- independent of Deno
 const makeHighlighter = tag => async text => {
 
   // todo: use pandoc only if available, otherwise a js lib (if available) or nothing = textToPre
@@ -168,8 +120,9 @@ const makeHighlighter = tag => async text => {
     cmd: ['pandoc', '-f', 'markdown'],
     stdin: "piped",
     stdout: 'piped',
-  });
+  })
 
+  // note: interested only in the side-effects
   const t = await pandoc.stdin.write(new TextEncoder().encode('```' + tag + '\n' + text + '\n```\n'))
   const x = await pandoc.stdin.close()
   // console.log('X', x)
@@ -180,7 +133,7 @@ const makeHighlighter = tag => async text => {
   const outt = new TextDecoder().decode(out)
 
 
-  const status = await pandoc.status();
+  const status = await pandoc.status()
 
   // console.log(t,outt, status)
 
@@ -340,8 +293,8 @@ const ctx = new Map([
   }],
 ])
 
-const parseHtmlJevko = (source, dir = '.', top = false) => {
-  return prep(parseJevkoWithHeredocs(source), dir, top)
+const parseHtmlJevko = (source, dir = '.') => {
+  return prep(parseJevkoWithHeredocs(source), dir)
 }
 
 // note: this is only used in tests
@@ -350,9 +303,9 @@ export const jevkoStrToHtmlStr = async (source, dir) => {
   return jevkoml(parseJevkoWithHeredocs(source), dir)
 }
 
-export const jevkoml = async (preppedjevko, dir) => {
-  // todo: remove handling of /output from prep -- Jevko CLI now handles that
-  const {output, prepend, root, document} = prep(preppedjevko, dir, true)
+export const jevkoml = async (preppedjevko, options) => {
+  const {dir, root, prepend} = options
+  const document = prep(preppedjevko, dir)
 
   const {
     attrs,

@@ -7,5 +7,4 @@ Deno.test('xml literals', async () => {
   const expected = Deno.readTextFileSync('tests/xml-literals/feed.expected.rss')
 
   assertEquals(document, expected)
-  // console.log(document)
 })
