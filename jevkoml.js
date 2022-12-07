@@ -321,22 +321,6 @@ export const jevkoml = async (preppedjevko, options) => {
 
   let content = await toHtml(jevko)
 
-  if (prepend !== undefined) {
-    const keywords = prepend
-    // note: hacky
-    if (keywords.includes('viewport')) {
-      content = `<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />` + content
-    }
-    if (keywords.includes('doctype')) {
-      content = `<!doctype html>\n` + content
-    }
-    // todo: ?xml special element
-    // note: this should be last (so it's always prepended at the beginning)
-    if (keywords.includes('xml1')) {
-      content = `<?xml version="1.0" encoding="UTF-8"?>\n` + content
-    }
-  }
-
   if (root !== undefined) {
     let main, rest
     if (Array.isArray(root)) {
@@ -358,6 +342,24 @@ export const jevkoml = async (preppedjevko, options) => {
     }
 
     content = `<${[main, ...attrs].join(' ')}>${openers}${content}${closers}</${main}>`
+  }
+
+  // note: this should be the last directive
+  if (prepend !== undefined) {
+    // todo: allow prepend be a single string
+    const keywords = prepend
+    // note: hacky
+    if (keywords.includes('viewport')) {
+      content = `<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />` + content
+    }
+    if (keywords.includes('doctype')) {
+      content = `<!doctype html>\n` + content
+    }
+    // todo: ?xml special element
+    // note: this should be last (so it's always prepended at the beginning)
+    if (keywords.includes('xml1')) {
+      content = `<?xml version="1.0" encoding="UTF-8"?>\n` + content
+    }
   }
 
   return content
