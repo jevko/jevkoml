@@ -1,4 +1,6 @@
 import {parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/parsejevko.js@v0.1.8/mod.js'
+
+// todo: remove/abstract over this dependency
 import * as mod from "https://deno.land/std@0.163.0/streams/conversion.ts";
 
 //?todo: ignore blanks before attribute names
@@ -115,6 +117,7 @@ const toHtml = async jevko => {
 // thanks to that .jevkoml could become a pure JS library -- independent of Deno
 const makeHighlighter = tag => async text => {
 
+  // TODO: remove/abstract over Deno* dependencies
   // todo: use pandoc only if available, otherwise a js lib (if available) or nothing = textToPre
   const pandoc = Deno.run({
     cmd: ['pandoc', '-f', 'markdown'],
@@ -335,7 +338,17 @@ export const jevkoml = async (preppedjevko, options) => {
   }
 
   if (root !== undefined) {
-    const [main, ...rest] = root
+    let main, rest
+    if (Array.isArray(root)) {
+      // todo: error 
+      console.assert(root.every(v => typeof v === 'string'))
+      ;[main, ...rest] = root
+    } else {
+      // todo: error 
+      console.assert(typeof root === 'string')
+      main = root
+      rest = []
+    }
 
     let openers = ''
     let closers = ''
