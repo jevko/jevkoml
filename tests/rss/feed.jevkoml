@@ -1,4 +1,4 @@
-`/xml/<rss version="2.0"><channel>/xml/
+`'xml'<rss version="2.0"><channel>'xml'
 
 title [Jevko updates]
 description [Latest official updates on the Jevko syntax]
@@ -25,4 +25,4 @@ item [
     p [#jevko #syntax #community #contributions]
   ]]
 ]
-`/xml/</channel></rss>/xml/
+`'xml'</channel></rss>'xml'

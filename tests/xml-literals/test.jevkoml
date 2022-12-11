@@ -1,6 +1,6 @@
-`/xml/<?xml version="1.0" encoding="UTF-8"?>
+`'xml'<?xml version="1.0" encoding="UTF-8"?>
 <rss version="2.0"><channel>
-/xml/
+'xml'
 title [Jevko updates]
 description [Latest official updates on the Jevko syntax]
 link [https://jevko.org]
@@ -26,6 +26,6 @@ item [
     p [#jevko #syntax #community #contributions]
   ]]
 ]
-`/xml/
+`'xml'
 </channel></rss>
-/xml/
+'xml'

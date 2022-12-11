@@ -1,8 +1,8 @@
-`/xml/<!doctype html>
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />/xml/
+`'xml'<!doctype html>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />'xml'
 
 style [
-  `//pre > code.sourceCode { white-space: pre; position: relative; }
+  `''pre > code.sourceCode { white-space: pre; position: relative; }
 pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
 pre > code.sourceCode > span:empty { height: 1.2em; }
 .sourceCode { overflow: visible; }
@@ -83,7 +83,7 @@ div.sourceCode {
 h1 {
   text-align: center;
 }
-//
+''
 ]
 
 # [anatomy of a jevko]
@@ -100,7 +100,7 @@ p [We shall call a specific instance of a Jevko tree a \jevko[.[inline]jevko].]
 p [An example of a jevko looks like this:]
 
 pre [
-jevko `//first name [string]
+jevko `''first name [string]
 last name [string]
 is alive [boolean]
 age [integer]
@@ -112,7 +112,7 @@ address [
 ]
 children [list]
 spouse []
-object//
+object''
 ]
 
 p [We will now break this example down and identify and name its parts.]
@@ -126,19 +126,19 @@ p [Notice that the jevko is not wrapped in square brackets. A jevko which is not
 p [A jevko is made out of a number of \sub[.[inline]subjevkos] followed by a \suf[.[inline]suffix]:]
 
 pre [
-sub `//first name [string]//
-sub `//last name [string]//
-sub `//is alive [boolean]//
-sub `//age [number]//
-sub `//address [
+sub `''first name [string]''
+sub `''last name [string]''
+sub `''is alive [boolean]''
+sub `''age [number]''
+sub `''address [
   street address [string]
   city [string]
   state [string]
   postal code [string]
-]//
-sub `//children [array]//
-sub `//spouse []//
-suf `//object//
+]''
+sub `''children [array]''
+sub `''spouse []''
+suf `''object''
 ]
 
 ## [subjevko parts: prefix and jevko]
@@ -146,9 +146,10 @@ suf `//object//
 p [A \sub[.[inline]subjevko] is a kind of a name-value pair:]
 
 pre [
-  sub `//first name [string]//
+  sub `''first name [string]''
 ]
 
 p [
-  A subjevko is made out of a \prefix[.[inline]prefix] followed by a \jevko[.[inline]jevko] wrapped in \`//[square brackets]//:
+  A subjevko is made out of a \prefix[.[inline]prefix] followed by a \jevko[.[inline]jevko] wrapped in \`''[square brackets]'':
 ]
+
