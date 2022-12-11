@@ -77,19 +77,19 @@ Fortunately Deno is very nice and [easy to install](https://deno.land/manual@v1.
 <!-- todo: better writing -->
 # HTML/XML literals
 
-You can enter literal HTML/XML which will not be escaped in the output via `` `/xml/ `` or `` `/html/ `` heredocs. For example:
+You can enter literal HTML/XML which will not be escaped in the output via `` `'xml' `` or `` `'html' `` heredocs. For example:
 
 ```
-`/html/
+`'html'
 <!doctype html>
 <html>
-/html/
+'html'
 
 p [hello]
 
-`/html/
+`'html'
 </html>
-/html/
+'html'
 ```
 
 will produce something like:
