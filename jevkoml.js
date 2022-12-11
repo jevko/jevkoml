@@ -1,4 +1,4 @@
-import {jevkoFromString as parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/jevko.js@v0.1.0/mod.js'
+import {jevkoFromString as parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/jevko.js@v0.1.5/mod.js'
 
 // todo: remove/abstract over this dependency
 import * as mod from "https://deno.land/std@0.163.0/streams/conversion.ts";
