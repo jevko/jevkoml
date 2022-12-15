@@ -46,19 +46,6 @@ const string = jevko => {
   return suffix
 }
 
-const listOfString = jevko => {
-  const {subjevkos, suffix} = jevko
-
-  if (subjevkos.length === 0) return [suffix]
-
-  const ret = []
-  for (const {prefix, jevko} of subjevkos) {
-    if (prefix !== '') throw Error('oops')
-    ret.push(string(jevko))
-  }
-  return ret
-}
-
 // todo?: perhaps separate htmlEscape for attributes that does &quot; -- otherwise don't
 const htmlEscape = str => {
   let ret = ''
