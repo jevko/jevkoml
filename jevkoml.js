@@ -1,8 +1,5 @@
 import {jevkoFromString as parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/jevko.js@v0.1.5/mod.js'
 
-// todo: remove/abstract over this dependency
-import * as mod from "https://deno.land/std@0.163.0/streams/conversion.ts";
-
 //?todo: ignore blanks before attribute names
 const breakPrefix = prefix => {
   let i = prefix.length - 1
@@ -68,7 +65,7 @@ const htmlEscape = str => {
   return ret + str.slice(h)
 }
 
-const toHtml = async jevko => {
+const toHtml = async (jevko) => {
   const {subjevkos, suffix} = jevko
 
   // text or highlighted text
@@ -79,7 +76,7 @@ const toHtml = async jevko => {
       return suffix
     } else if (tag !== undefined) {
       // unknown tag uses default highlighter
-      const highlighter = highlighters.get(tag) ?? makeHighlighter(tag)
+      const highlighter = highlighters.get(tag) ?? defaultHighlighter
       // note: assuming highlighter will do htmlEscape
       return highlighter(suffix)
     }
@@ -100,40 +97,9 @@ const toHtml = async jevko => {
   return ret + htmlEscape(suffix.trimEnd())
 }
 
-//?todo: extract this as a jevkoml extension
-// thanks to that .jevkoml could become a pure JS library -- independent of Deno
-const makeHighlighter = tag => async text => {
-
-  // TODO: remove/abstract over Deno* dependencies
-  // todo: use pandoc only if available, otherwise a js lib (if available) or nothing = textToPre
-  const pandoc = Deno.run({
-    cmd: ['pandoc', '-f', 'markdown'],
-    stdin: "piped",
-    stdout: 'piped',
-  })
-
-  // note: interested only in the side-effects
-  const t = await pandoc.stdin.write(new TextEncoder().encode('```' + tag + '\n' + text + '\n```\n'))
-  const x = await pandoc.stdin.close()
-  // console.log('X', x)
-
-  const out = await mod.readAll(pandoc.stdout)
-  // console.log(out)
-  await pandoc.stdout.close()
-  const outt = new TextDecoder().decode(out)
-
-
-  const status = await pandoc.status()
-
-  // console.log(t,outt, status)
-
-
-
-  return outt
-}
-
 // todo: pass heredocs to pandoc/custom highlighters
 const cdata = text => htmlEscape(text)
+const defaultHighlighter = cdata
 
 const highlighters = new Map([
   ['', cdata],
