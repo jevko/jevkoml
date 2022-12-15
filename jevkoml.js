@@ -65,6 +65,7 @@ const htmlEscape = str => {
   return ret + str.slice(h)
 }
 
+//?todo: , options?
 const toHtml = async (jevko) => {
   const {subjevkos, suffix} = jevko
 
@@ -277,12 +278,14 @@ export const jevkoml = async (preppedjevko, options) => {
   if (root !== undefined) {
     let main, rest
     if (Array.isArray(root)) {
-      // todo: error 
-      console.assert(root.every(v => typeof v === 'string'))
+      if (root.every(v => typeof v === 'string') === false) {
+        throw Error(`Expected root to be a string or a list of strings!`)
+      }
       ;[main, ...rest] = root
     } else {
-      // todo: error 
-      console.assert(typeof root === 'string')
+      if (typeof root !== 'string') {
+        throw Error(`Expected root to be a string or a list of strings!`)
+      }
       main = root
       rest = []
     }
