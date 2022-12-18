@@ -261,8 +261,18 @@ export const jevkoStrToHtmlStr = async (source, dir) => {
 }
 
 export const jevkoml = async (preppedjevko, options) => {
-  const {dir, root, prepend} = options
+  const {dir, root, prepend, extensions} = options
   const document = prep(preppedjevko, dir)
+
+  if (extensions !== undefined) {
+    const {elements} = extensions
+    if (elements !== undefined) {
+      const entries = Object.entries(elements)
+      for (const [k, v] of entries) {
+        ctx.set(k, v)
+      }
+    }
+  }
 
   const {
     attrs,
