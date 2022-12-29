@@ -1,1 +1,16 @@
 [+] XML literals: heredocs /xml/, no escaping there
+
+translation from HTML/XML:
+  configure/write parser so that it can (optionally?) operate on the assumption of well-formedness of the source
+    in such case if it can't correctly parse a fragment, let it fall back to writing it out verbatim as raw HTML/XML:
+
+    raw xml [<?app instr?>]
+
+    or
+
+    raw xml `''<?app instr?>''
+
+    or
+
+    `'xml'<?app inst?>'xml'
+
