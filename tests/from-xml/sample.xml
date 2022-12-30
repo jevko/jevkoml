@@ -1,0 +1,19 @@
+<root>
+<h1 id="normative-references">Normative references</h1>
+<p><a id="ref-unicode"></a></p>
+<div id="ref-unicode">
+<p>[Unicode] The Unicode Consortium, “The Unicode Standard”, the latest
+version, <a href="http://www.unicode.org/versions/latest/" class="uri">http://www.unicode.org/versions/latest/</a>.</p>
+</div>
+<p><a id="ref-rfc-5234"></a></p>
+<div id="ref-rfc-5234">
+<p>[RFC 5234] Crocker, D., Ed. and P. Overell, “Augmented BNF for Syntax
+Specifications: ABNF”, STD 68, RFC 5234, DOI 10.17487/RFC5234, January
+2008, <a href="https://www.rfc-editor.org/info/rfc5234" class="uri">https://www.rfc-editor.org/info/rfc5234</a>.</p>
+</div>
+<h1 id="see-also">See also</h1>
+<ul>
+<li><p>Jevko examples: <a href="https://github.com/jevko/examples" class="uri">https://github.com/jevko/examples</a></p></li>
+<li><p>Jevko interactive railroad diagrams: <a href="https://jevko.org/diagram.xhtml" class="uri">https://jevko.org/diagram.xhtml</a>
+</p></li></ul>
+</root>
