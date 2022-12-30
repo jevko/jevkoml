@@ -9,7 +9,8 @@ const breakPrefix = prefix => {
       break
     }
   }
-  if (i > 0) {
+  // todo: should this if be removed?
+  if (i >= 0) {
     const text = prefix.slice(0, i)
     const tag = prefix.slice(i + 1).trim()
     return [text, tag]
@@ -94,8 +95,7 @@ const toHtml = async (jevko) => {
     ret += await maker(jevko)
   }
 
-  // todo: perhaps don't trim-right the suffix?
-  return ret + htmlEscape(suffix.trimEnd())
+  return ret + htmlEscape(suffix)
 }
 
 // todo: pass heredocs to pandoc/custom highlighters
@@ -257,7 +257,7 @@ const parseHtmlJevko = (source, dir = '.') => {
 // note: this is only used in tests
 //?todo: move to test utils or sth
 export const jevkoStrToHtmlStr = async (source, dir) => {
-  return jevkoml(parseJevkoWithHeredocs(source), dir)
+  return jevkoml(parseJevkoWithHeredocs(source), {dir})
 }
 
 export const jevkoml = async (preppedjevko, options) => {

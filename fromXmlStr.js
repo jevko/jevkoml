@@ -1,5 +1,5 @@
 // todo: deps.js, mod.js, etc.
-import {fnlxml, resolveEntity2} from 'https://raw.githubusercontent.com/xtao-org/fnlxml/v0.1.0/fnlxml.js'
+import {fnlxml, resolveEntity} from 'https://raw.githubusercontent.com/xtao-org/fnlxml/v0.2.0/fnlxml.js'
 import {escape} from 'https://cdn.jsdelivr.net/gh/jevko/jevko.js@v0.1.5/mod.js'
 
 export const fromXmlStr = (str) => {
@@ -10,7 +10,7 @@ export const fromXmlStr = (str) => {
       const str = escape(str_)
       if (name === 'STagName') ret += `\\${str} [`
       else if (name === 'AttValue') ret += str
-      else if (name === 'Reference') ret += resolveEntity2(str)
+      else if (name === 'Reference') ret += resolveEntity(str)
       else if (name === 'Attribute') ret += `]`
       else if (name === 'ETagName') ret += `]`
       else if (name === 'CData') ret += str
