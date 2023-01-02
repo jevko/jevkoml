@@ -1,5 +1,7 @@
 import {jevkoFromString as parseJevkoWithHeredocs} from 'https://cdn.jsdelivr.net/gh/jevko/jevko.js@v0.1.5/mod.js'
 
+export {fromXmlStr} from './fromXmlStr.js'
+
 //?todo: ignore blanks before attribute names
 const breakPrefix = prefix => {
   let i = prefix.length - 1
