@@ -10,14 +10,22 @@ export const resolveEntity = (ent) => {
   if (ent === '&apos;') return "'"
   if (ent === '&amp;') return "&"
   if (ent === '&nbsp;') return " "
-  if (ent === '&#39;') return "\x39"
+
+  if (ent.startsWith('&#x')) {
+    const num = Number.parseInt(ent.slice(3, -1), 16)
+    return String.fromCodePoint(num)
+  }
+  // todo?: optimize &#x vs &# 
+  if (ent.startsWith('&#')) {
+    return String.fromCodePoint(Number.parseInt(ent.slice(2, -1)))
+  }
+
   throw Error(`Unknown entity: ${ent}`)
 }
 
 
 export const fromXmlStr = (str) => {
   let ret = ''
-  let hasAttrs = false
   const stream = fnlxml({
     emit(name, str_) {
       const str = escape(str_)
