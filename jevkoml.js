@@ -143,7 +143,8 @@ const makeTag = (tag_) => async jevko => {
   const isSelfClosing = tag_.endsWith('/')
   const tag = isSelfClosing? tag_.slice(0, -1): tag_
 
-  const tagWithAttrs = [tag]
+  // will prepend tag in here before class and other attributes (in that order) and then join these with space
+  const tagWithAttrs = []
   const children = []
   const classes = []
   for (const s of subjevkos) {
@@ -154,7 +155,11 @@ const makeTag = (tag_) => async jevko => {
   }
 
   // todo?: htmlEscape classnames
-  if (classes.length > 0) tagWithAttrs.push(`class="${classes.join(' ')}"`)
+  // class goes before other attrs
+  if (classes.length > 0) tagWithAttrs.unshift(`class="${classes.join(' ')}"`)
+
+  // tag goes before attrs
+  tagWithAttrs.unshift(tag)
 
   if (isSelfClosing) {
     if (children.length > 0) throw Error(`Expected no children in self-closing tag ${tag}, got ${children.length}!`)
