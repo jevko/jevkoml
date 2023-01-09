@@ -137,8 +137,11 @@ const makeTop = jevko => {
   }
 }
 
-const makeTag = tag => async jevko => {
+const makeTag = (tag_) => async jevko => {
   const {subjevkos, suffix, ...rest} = jevko
+
+  const isSelfClosing = tag_.endsWith('/')
+  const tag = isSelfClosing? tag_.slice(0, -1): tag_
 
   const tagWithAttrs = [tag]
   const children = []
@@ -152,6 +155,11 @@ const makeTag = tag => async jevko => {
 
   // todo?: htmlEscape classnames
   if (classes.length > 0) tagWithAttrs.push(`class="${classes.join(' ')}"`)
+
+  if (isSelfClosing) {
+    if (children.length > 0) throw Error(`Expected no children in self-closing tag ${tag}, got ${children.length}!`)
+    return `<${tagWithAttrs.join(' ')} />`
+  }
 
   // note: pass in ...rest to handle highlighters and html/xml literals
   return `<${tagWithAttrs.join(' ')}>${await toHtml({subjevkos: children, suffix, ...rest})}</${tag}>`
