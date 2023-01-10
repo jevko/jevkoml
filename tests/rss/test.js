@@ -1,5 +1,5 @@
 import {jevkoStrToHtmlStr} from '../../jevkoml.js'
-import { assertEquals } from "https://deno.land/std@0.165.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.171.0/testing/asserts.ts";
 
 Deno.test('rss', async () => {
   const document = await jevkoStrToHtmlStr(Deno.readTextFileSync('tests/rss/feed.jevkoml'), 'tests/rss/')
