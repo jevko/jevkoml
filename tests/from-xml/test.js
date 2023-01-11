@@ -1,6 +1,6 @@
 import {fromXmlStr} from '../../fromXmlStr.js'
 import {jevkoStrToHtmlStr} from '../../jevkoml.js'
-import { assertEquals } from "https://deno.land/std@0.171.0/testing/asserts.ts";
+import { assertEquals } from "../../devDeps.js"
 import * as path from "https://deno.land/std@0.57.0/path/mod.ts";
 
 const __dirname = path.dirname(path.fromFileUrl(import.meta.url))

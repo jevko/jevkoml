@@ -1,5 +1,5 @@
 import {resolveEntity} from '../../fromXmlStr.js'
-import { assertEquals } from "https://deno.land/std@0.171.0/testing/asserts.ts";
+import { assertEquals } from "../../devDeps.js"
 
 Deno.test('entity hex', () => {
   const cases = [
