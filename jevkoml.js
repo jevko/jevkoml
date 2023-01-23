@@ -41,7 +41,7 @@ const prep = (jevko, dir = '.') => {
 const string = jevko => {
   const {subjevkos, suffix} = jevko
 
-  if (subjevkos.length > 0) throw Error("oops")
+  if (subjevkos.length > 0) throw Error("Expected 0 subjevkos in string!")
 
   return suffix
 }
